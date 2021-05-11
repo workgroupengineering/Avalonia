@@ -4,6 +4,7 @@ using Avalonia.Input.Raw;
 using Avalonia.Input.TextInput;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
+using System.Linq;
 
 namespace Avalonia.Input
 {
@@ -215,7 +216,7 @@ namespace Avalonia.Input
                         IVisual currentHandler = element;
                         while (currentHandler != null && !ev.Handled && keyInput.Type == RawKeyEventType.KeyDown)
                         {
-                            var bindings = (currentHandler as IInputElement)?.KeyBindings;
+                            var bindings = (currentHandler as IInputElement)?.KeyBindings.ToList();
                             if (bindings != null)
                                 foreach (var binding in bindings)
                                 {
