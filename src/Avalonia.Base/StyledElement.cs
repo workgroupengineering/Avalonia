@@ -347,7 +347,10 @@ namespace Avalonia
         /// <returns>
         /// A value indicating whether styling is now applied to the control.
         /// </returns>
-        protected bool ApplyStyling()
+        protected bool ApplyStyling() =>
+            ApplyStylingOverride();
+
+        internal protected virtual bool ApplyStylingOverride()
         {
             if (_initCount == 0 && !_styled)
             {
@@ -964,5 +967,7 @@ namespace Avalonia
                 RecurseStyles(style.Children, result);
             }
         }
+
+        internal protected bool IsAppliedStyling => _styled;
     }
 }

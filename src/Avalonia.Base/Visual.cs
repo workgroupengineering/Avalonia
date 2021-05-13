@@ -112,6 +112,7 @@ namespace Avalonia
         private IVisual? _visualParent;
         private bool _hasMirrorTransform;
         private TargetWeakEventSubscriber<Visual, EventArgs>? _affectsRenderWeakSubscriber;
+        private int _countPropertiesUpdate = 0;
 
         /// <summary>
         /// Initializes static members of the <see cref="Visual"/> class.
@@ -709,6 +710,60 @@ namespace Avalonia
                 var visual = (Visual) children[i]!;
                 
                 visual.SetVisualParent(parent);
+            }
+        }
+
+        protected internal override bool ApplyStylingOverride()
+        {
+            // ApplyStyling only when is not already applied and Visual is visble.
+            if (IsAppliedStyling == false && IsEffectivelyVisible == true)
+            {
+                return base.ApplyStylingOverride();
+            }
+            return true;
+        }
+
+        protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+        {
+            base.OnPropertyChanged(change);
+            if (change.Property == IsVisibleProperty)
+            {
+                // When visibulity changed try apply Styling.
+                ApplyStyling();
+            }
+        }
+
+        protected internal override void OnBeginBatchUpdate()
+        {
+            base.OnBeginBatchUpdate();
+        }
+
+        protected internal override void OnBeforeGetPropertyValue(string propertyName)
+        {
+            if (IsInitialized
+                && propertyName != nameof(IsVisible)
+                && propertyName != nameof(Name)
+                && IsAppliedStyling == false)
+            {
+                if (BatchUpdate)
+                {
+                    _countPropertiesUpdate++;
+                }
+                else
+                {
+                    base.ApplyStylingOverride();
+                }
+            }
+        }
+
+        protected internal override void OnEndBatchUpdate()
+        {
+            base.OnEndBatchUpdate();
+            if (_countPropertiesUpdate > 0)
+            {
+                _countPropertiesUpdate = -_countPropertiesUpdate;
+                base.ApplyStylingOverride();
+                _countPropertiesUpdate = 0;
             }
         }
     }
