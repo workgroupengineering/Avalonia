@@ -16,6 +16,7 @@ namespace Avalonia.Controls
         private static readonly ITemplate<IPanel> DefaultPanel =
             new FuncTemplate<IPanel>(() => new StackPanel { Orientation = Orientation.Horizontal });
 
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Menu"/> class.
         /// </summary>

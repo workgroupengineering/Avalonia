@@ -10,6 +10,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 
 namespace Avalonia.Controls
@@ -187,8 +188,8 @@ namespace Avalonia.Controls
             if (e.Handled)
                 return;
 
-            if (e.Key == Key.F4 ||
-                ((e.Key == Key.Down || e.Key == Key.Up) && e.KeyModifiers.HasFlagCustom(KeyModifiers.Alt)))
+            if ((e.Key == Key.F4 && e.KeyModifiers.HasAllFlags(KeyModifiers.Alt) == false) ||
+                ((e.Key == Key.Down || e.Key == Key.Up) && e.KeyModifiers.HasAllFlags(KeyModifiers.Alt)))
             {
                 IsDropDownOpen = !IsDropDownOpen;
                 e.Handled = true;

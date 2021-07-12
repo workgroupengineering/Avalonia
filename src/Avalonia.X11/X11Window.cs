@@ -296,6 +296,30 @@ namespace Avalonia.X11
 
         public Size ClientSize => new Size(_realSize.Width / RenderScaling, _realSize.Height / RenderScaling);
 
+        public Size? FrameSize
+        {
+            get
+            {
+                XGetWindowProperty(_x11.Display, _handle, _x11.Atoms._NET_FRAME_EXTENTS, IntPtr.Zero,
+                    new IntPtr(4), false, (IntPtr)Atom.AnyPropertyType, out var _,
+                    out var _, out var nitems, out var _, out var prop);
+
+                if (nitems.ToInt64() != 4)
+                {
+                    // Window hasn't been mapped by the WM yet, so can't get the extents.
+                    return null;
+                }
+
+                var data = (IntPtr*)prop.ToPointer();
+                var extents = new Thickness(data[0].ToInt32(), data[2].ToInt32(), data[1].ToInt32(), data[3].ToInt32());
+                XFree(prop);
+                
+                return new Size(
+                    (_realSize.Width + extents.Left + extents.Right) / RenderScaling,
+                    (_realSize.Height + extents.Top + extents.Bottom) / RenderScaling);
+            }
+        }
+
         public double RenderScaling
         {
             get
@@ -592,6 +616,13 @@ namespace Avalonia.X11
 
         private void OnPropertyChange(IntPtr atom, bool hasValue)
         {
+            if (atom == _x11.Atoms._NET_FRAME_EXTENTS)
+            {
+                // Occurs once the window has been mapped, which is the earliest the extents
+                // can be retrieved, so invoke event to force update of TopLevel.FrameSize.
+                Resized.Invoke(ClientSize);
+            }
+
             if (atom == _x11.Atoms._NET_WM_STATE)
             {
                 WindowState state = WindowState.Normal;
@@ -642,23 +673,23 @@ namespace Avalonia.X11
         RawInputModifiers TranslateModifiers(XModifierMask state)
         {
             var rv = default(RawInputModifiers);
-            if (state.HasFlagCustom(XModifierMask.Button1Mask))
+            if (state.HasAllFlags(XModifierMask.Button1Mask))
                 rv |= RawInputModifiers.LeftMouseButton;
-            if (state.HasFlagCustom(XModifierMask.Button2Mask))
+            if (state.HasAllFlags(XModifierMask.Button2Mask))
                 rv |= RawInputModifiers.RightMouseButton;
-            if (state.HasFlagCustom(XModifierMask.Button3Mask))
+            if (state.HasAllFlags(XModifierMask.Button3Mask))
                 rv |= RawInputModifiers.MiddleMouseButton;
-            if (state.HasFlagCustom(XModifierMask.Button4Mask))
+            if (state.HasAllFlags(XModifierMask.Button4Mask))
                 rv |= RawInputModifiers.XButton1MouseButton;
-            if (state.HasFlagCustom(XModifierMask.Button5Mask))
+            if (state.HasAllFlags(XModifierMask.Button5Mask))
                 rv |= RawInputModifiers.XButton2MouseButton;
-            if (state.HasFlagCustom(XModifierMask.ShiftMask))
+            if (state.HasAllFlags(XModifierMask.ShiftMask))
                 rv |= RawInputModifiers.Shift;
-            if (state.HasFlagCustom(XModifierMask.ControlMask))
+            if (state.HasAllFlags(XModifierMask.ControlMask))
                 rv |= RawInputModifiers.Control;
-            if (state.HasFlagCustom(XModifierMask.Mod1Mask))
+            if (state.HasAllFlags(XModifierMask.Mod1Mask))
                 rv |= RawInputModifiers.Alt;
-            if (state.HasFlagCustom(XModifierMask.Mod4Mask))
+            if (state.HasAllFlags(XModifierMask.Mod4Mask))
                 rv |= RawInputModifiers.Meta;
             return rv;
         }
