@@ -463,7 +463,7 @@ namespace Avalonia
             {
                 throw new InvalidOperationException("Batch update already in progress.");
             }
-
+            OnBeginBatchUpdate();
             _batchUpdate = true;
             _values?.BeginBatchUpdate();
         }
@@ -477,6 +477,7 @@ namespace Avalonia
 
             _batchUpdate = false;
             _values?.EndBatchUpdate();
+            OnEndBatchUpdate();
         }
 
         /// <inheritdoc/>
@@ -900,6 +901,16 @@ namespace Avalonia
                 property,
                 value,
                 priority);
+        }
+
+        protected internal virtual void OnBeginBatchUpdate()
+        {
+         
+        }
+
+        protected internal virtual void OnEndBatchUpdate()
+        {
+
         }
 
         protected internal virtual void OnBeforeGetPropertyValue(string name)

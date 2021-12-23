@@ -96,6 +96,7 @@ namespace Avalonia
         private TransformedBounds? _transformedBounds;
         private IRenderRoot? _visualRoot;
         private IVisual? _visualParent;
+        private int _countPropertiesUpdate = 0;
 
         /// <summary>
         /// Initializes static members of the <see cref="Visual"/> class.
@@ -666,15 +667,37 @@ namespace Avalonia
             }
         }
 
+        protected internal override void OnBeginBatchUpdate()
+        {
+            base.OnBeginBatchUpdate();
+        }
+
         protected internal override void OnBeforeGetPropertyValue(string propertyName)
         {
             if (IsInitialized
-                && !BatchUpdate
                 && propertyName != nameof(IsVisible)
                 && propertyName != nameof(Name)
                 && IsAppliedStyling == false)
             {
+                if (BatchUpdate)
+                {
+                    _countPropertiesUpdate++;
+                }
+                else
+                {
+                    base.ApplyStylingOverride();
+                }
+            }
+        }
+
+        protected internal override void OnEndBatchUpdate()
+        {
+            base.OnEndBatchUpdate();
+            if (_countPropertiesUpdate > 0)
+            {
+                _countPropertiesUpdate = -_countPropertiesUpdate;
                 base.ApplyStylingOverride();
+                _countPropertiesUpdate = 0;
             }
         }
     }
