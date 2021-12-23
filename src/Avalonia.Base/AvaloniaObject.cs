@@ -235,6 +235,7 @@ namespace Avalonia
         {
             property = property ?? throw new ArgumentNullException(nameof(property));
 
+            OnBeforeGetPropertyValue(property.Name);
             return property.RouteGetValue(this);
         }
 
@@ -248,6 +249,8 @@ namespace Avalonia
         {
             property = property ?? throw new ArgumentNullException(nameof(property));
             VerifyAccess();
+
+            OnBeforeGetPropertyValue(property.Name);
 
             return GetValueOrInheritedOrDefault(property);
         }
@@ -272,6 +275,8 @@ namespace Avalonia
         {
             property = property ?? throw new ArgumentNullException(nameof(property));
             VerifyAccess();
+
+            OnBeforeGetPropertyValue(property.Name);
 
             if (_values is object &&
                 _values.TryGetValue(property, maxPriority, out var value))
@@ -896,6 +901,13 @@ namespace Avalonia
                 value,
                 priority);
         }
+
+        protected internal virtual void OnBeforeGetPropertyValue(string name)
+        {
+
+        }
+
+        protected internal bool BatchUpdate => _batchUpdate;
 
         private class DirectBindingSubscription<T> : IObserver<BindingValue<T>>, IDisposable
         {

@@ -3,7 +3,7 @@
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <AssemblyName>Avalonia.Base</AssemblyName>
     <RootNamespace>Avalonia</RootNamespace>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>    
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <Import Project="..\..\build\Base.props" />
   <Import Project="..\..\build\Binding.props" />
@@ -12,4 +12,8 @@
   <Import Project="..\..\build\System.Memory.props" />
   <Import Project="..\..\build\ApiDiff.props" />
   <Import Project="..\..\build\NullableEnable.props" />
+  <Import Project="..\..\build\PublicKey.props" />
+  <ItemGroup>
+    <InternalsVisibleTo Include="Avalonia.Styling, PublicKey=$(AvaloniaPublicKey)"/>
+  </ItemGroup>
 </Project>

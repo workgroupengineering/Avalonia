@@ -665,5 +665,17 @@ namespace Avalonia
                 ApplyStyling();
             }
         }
+
+        protected internal override void OnBeforeGetPropertyValue(string propertyName)
+        {
+            if (IsInitialized
+                && !BatchUpdate
+                && propertyName != nameof(IsVisible)
+                && propertyName != nameof(Name)
+                && IsAppliedStyling == false)
+            {
+                base.ApplyStylingOverride();
+            }
+        }
     }
 }

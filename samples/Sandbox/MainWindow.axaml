@@ -1,4 +1,15 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
         x:Class="Sandbox.MainWindow">
+    <Grid ColumnDefinitions="*,*">
+        <Rectangle Grid.Column="0" Fill="{Binding #OtherRect.Fill}" Name="Target" Margin="5"/>
+
+        <Rectangle Grid.Column="1" IsVisible="False" x:Name="OtherRect">
+            <Rectangle.Styles>
+                <Style Selector="Rectangle">
+                    <Setter Property="Fill" Value="Red" />
+                </Style>
+            </Rectangle.Styles>
+        </Rectangle>
+    </Grid>
 </Window>
