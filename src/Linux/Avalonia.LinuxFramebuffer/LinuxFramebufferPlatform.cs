@@ -20,23 +20,21 @@ using Avalonia.Rendering.Composition;
 
 namespace Avalonia.LinuxFramebuffer
 {
-    class LinuxFramebufferPlatform
+    internal class LinuxFramebufferPlatform
     {
-        IOutputBackend _fb;
-        private static readonly Stopwatch St = Stopwatch.StartNew();
-        internal static uint Timestamp => (uint)St.ElapsedTicks;
-        public static InternalPlatformThreadingInterface? Threading;
+        private readonly IOutputBackend _fb;
+        private static readonly Stopwatch s_st = new ();
+        internal static uint Timestamp => (uint)s_st.ElapsedTicks;
+        public static InternalPlatformThreadingInterface? Threading { get; private set; }
 
         internal static Compositor Compositor { get; private set; } = null!;
         
-        
-        LinuxFramebufferPlatform(IOutputBackend backend)
+        private LinuxFramebufferPlatform(IOutputBackend backend)
         {
             _fb = backend;
         }
 
-
-        void Initialize()
+        private void Initialize()
         {
             Threading = new InternalPlatformThreadingInterface();
             if (_fb is IGlOutputBackend gl)
@@ -51,6 +49,7 @@ namespace Avalonia.LinuxFramebuffer
                 .Bind<ICursorFactory>().ToTransient<CursorFactoryStub>()
                 .Bind<IKeyboardDevice>().ToConstant(new KeyboardDevice())
                 .Bind<IPlatformSettings>().ToSingleton<DefaultPlatformSettings>()
+                .Bind<IPlatformIconLoader>().ToConstant(new LinuxFramebufferIconLoader())
                 .Bind<PlatformHotkeyConfiguration>().ToSingleton<PlatformHotkeyConfiguration>();
             
             Compositor = new Compositor(
@@ -67,18 +66,13 @@ namespace Avalonia.LinuxFramebuffer
         }
     }
 
-    class LinuxFramebufferLifetime : IControlledApplicationLifetime, ISingleViewApplicationLifetime
+    internal class LinuxFramebufferLifetime : IControlledApplicationLifetime, ISingleViewApplicationLifetime
     {
         private readonly IOutputBackend _fb;
         private readonly IInputBackend? _inputBackend;
         private TopLevel? _topLevel;
-        private readonly CancellationTokenSource _cts = new CancellationTokenSource();
+        private readonly CancellationTokenSource _cts = new();
         public CancellationToken Token => _cts.Token;
-
-        public LinuxFramebufferLifetime(IOutputBackend fb)
-        {
-            _fb = fb;
-        }
 
         public LinuxFramebufferLifetime(IOutputBackend fb, IInputBackend? input)
         {
@@ -123,7 +117,7 @@ namespace Avalonia.LinuxFramebuffer
 
         public void Start(string[] args)
         {
-            Startup?.Invoke(this, new ControlledApplicationLifetimeStartupEventArgs(args));
+            Startup?.Invoke(this, new(args));
         }
 
         public void Shutdown(int exitCode)
