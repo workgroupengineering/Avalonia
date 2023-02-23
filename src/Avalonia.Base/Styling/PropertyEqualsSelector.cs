@@ -11,21 +11,14 @@ namespace Avalonia.Styling
     /// A selector that matches the common case of a type and/or name followed by a collection of
     /// style classes and pseudoclasses.
     /// </summary>
-    internal class PropertyEqualsSelector : Selector
+    sealed internal class PropertyEqualsSelector : PropertySelector<object>
     {
-        private readonly Selector? _previous;
-        private readonly AvaloniaProperty _property;
-        private readonly object? _value;
-        private string? _selectorString;
-
         public PropertyEqualsSelector(Selector? previous, AvaloniaProperty property, object? value)
+            :base(previous,property,value)
         {
-            property = property ?? throw new ArgumentNullException(nameof(property));
-
-            _previous = previous;
-            _property = property;
-            _value = value;
         }
+
+        protected override string Operator => "=";
 
         /// <inheritdoc/>
         internal override bool InTemplate => _previous?.InTemplate ?? false;
@@ -77,11 +70,11 @@ namespace Avalonia.Styling
         {
             if (subscribe)
             {
-                return new SelectorMatch(new PropertyEqualsActivator(control, _property, _value));
+                return new SelectorMatch(new PropertyEqualsActivator(control, Property, Value));
             }
             else
             {
-                return Compare(_property.PropertyType, control.GetValue(_property), _value)
+                return Compare(Property.PropertyType, control.GetValue(Property), Value)
                     ? SelectorMatch.AlwaysThisInstance
                     : SelectorMatch.NeverThisInstance;
             }
