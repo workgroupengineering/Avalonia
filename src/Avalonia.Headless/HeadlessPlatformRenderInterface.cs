@@ -141,9 +141,7 @@ namespace Avalonia.Headless
             }
 
             public IReadOnlyList<float> GetIntersections(float lowerBound, float upperBound)
-            {
-                return null;
-            }
+                => Array.Empty<float>();
         }
 
         class HeadlessGeometryStub : IGeometryImpl
@@ -327,7 +325,7 @@ namespace Avalonia.Headless
 
             }
 
-            public IDrawingContextImpl CreateDrawingContext(IVisualBrushRenderer visualBrushRenderer)
+            public IDrawingContextImpl CreateDrawingContext()
             {
                 return new HeadlessDrawingContextStub();
             }
@@ -394,7 +392,7 @@ namespace Avalonia.Headless
 
             }
 
-            public void PushOpacity(double opacity)
+            public void PushOpacity(double opacity, Rect rect)
             {
 
             }
@@ -493,7 +491,7 @@ namespace Avalonia.Headless
 
             }
 
-            public IDrawingContextImpl CreateDrawingContext(IVisualBrushRenderer visualBrushRenderer)
+            public IDrawingContextImpl CreateDrawingContext()
             {
                 return new HeadlessDrawingContextStub();
             }

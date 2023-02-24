@@ -148,7 +148,7 @@ public static class LinuxFramebufferPlatformExtensions
         var lifetime = LinuxFramebufferPlatform.Initialize(builder, outputBackend, inputBackend);
         builder.SetupWithLifetime(lifetime);
         lifetime.Start(args);
-        builder.Instance.Run(lifetime.Token);
+        builder.Instance!.Run(lifetime.Token);
         return lifetime.ExitCode;
     }
 }
