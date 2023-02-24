@@ -6,30 +6,24 @@ namespace Avalonia.Styling;
 /// <summary>
 /// Base selector allow compare <see cref="AvaloniaObject"/> value.
 /// </summary>
-internal abstract class PropertySelector<T> : Selector
+internal abstract class PropertySelector : Selector
 {
     private readonly Selector? _previous;
     private readonly AvaloniaProperty _property;
-    private readonly T? _value;
     private string? _selectorString;
 
-    public PropertySelector(Selector? previous, AvaloniaProperty property, T? value)
+    public PropertySelector(Selector? previous, AvaloniaProperty property)
     {
         property = property ?? throw new ArgumentNullException(nameof(property));
 
         _previous = previous;
         _property = property;
-        _value = value;
     }
 
     /// <summary>
     /// <see cref="AvaloniaProperty"/> to compare.
     /// </summary>
     protected AvaloniaProperty Property => _property;
-    /// <summary>
-    /// Reference vaule
-    /// </summary>
-    protected T? Value => _value;
 
     /// <inheritdoc/>
     public override bool InTemplate => _previous?.InTemplate ?? false;
@@ -41,7 +35,7 @@ internal abstract class PropertySelector<T> : Selector
     public override Type? TargetType => _previous?.TargetType;
 
     /// <inheritdoc/>
-    public sealed override string ToString(Style? owner)
+    sealed public override string ToString(Style? owner)
     {
         if (_selectorString == null)
         {
@@ -67,7 +61,7 @@ internal abstract class PropertySelector<T> : Selector
                 builder.Append(')');
             }
             builder.Append(Operator);
-            builder.Append(_value);
+            OnToString(owner, builder);
             builder.Append(']');
 
             _selectorString = StringBuilderCache.GetStringAndRelease(builder);
@@ -75,6 +69,8 @@ internal abstract class PropertySelector<T> : Selector
 
         return _selectorString;
     }
+
+    protected abstract void OnToString(Style? owner, System.Text.StringBuilder builder);
 
     protected abstract string Operator { get; }
 

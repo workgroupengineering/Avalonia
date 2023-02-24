@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Avalonia.Styling.Activators;
-using Avalonia.Utilities;
 
 namespace Avalonia.Styling
 {
@@ -11,14 +10,19 @@ namespace Avalonia.Styling
     /// A selector that matches the common case of a type and/or name followed by a collection of
     /// style classes and pseudoclasses.
     /// </summary>
-    sealed internal class PropertyEqualsSelector : PropertySelector<object>
+    sealed internal class PropertyEqualsSelector : PropertySelector
     {
         public PropertyEqualsSelector(Selector? previous, AvaloniaProperty property, object? value)
-            :base(previous,property,value)
+            :base(previous,property)
         {
+            Value = value;
         }
 
         protected override string Operator => "=";
+        protected override void OnToString(Style? owner, System.Text.StringBuilder builder) =>
+            builder.Append(Value);
+
+        public object? Value { get; }
 
         /// <inheritdoc/>
         internal override bool InTemplate => _previous?.InTemplate ?? false;
@@ -78,7 +82,6 @@ namespace Avalonia.Styling
                     ? SelectorMatch.AlwaysThisInstance
                     : SelectorMatch.NeverThisInstance;
             }
-            
         }
 
         private protected override Selector? MovePrevious() => _previous;
