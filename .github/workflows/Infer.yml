@@ -1,0 +1,47 @@
+name: Infer# Avalonia.Desktop
+
+on: [workflow_dispatch]
+
+jobs:
+  Analisys:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: true
+        
+    - uses: actions/setup-dotnet@v3
+      name: 'Install SDKs'
+      with:
+        dotnet-version: | 
+            6.0.x
+            7.0.x
+
+    - name: 'Install Workloads'
+      run: dotnet workload install wasm-tools wasm-experimental
+    
+    - name: Build
+      run: |
+        dotnet --info
+        printenv
+        dotnet build ./src/Avalonia.Desktop/Avalonia.Desktop.csproj -f net6.0 -c Release
+
+    - name: Run Infer#
+      uses: workgroupengineering/infersharpaction@sarif
+      id: runinfersharp
+      with:
+        binary-path: './src/Avalonia.Desktop/bin/Release/net6.0'
+        github-sarif: 'true'
+       
+    - name: Upload Infer# report as an artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: report
+        path: './infer-out/report.*'
+
+    - name: Upload SARIF output to GitHub Security Center
+      uses: github/codeql-action/upload-sarif@main
+      with:
+        sarif_file: './infer-out/report.sarif'
+
