@@ -102,12 +102,14 @@ namespace Avalonia.Base.UnitTests.Animation
         {
             var keyframe1 = new KeyFrame()
             {
-                Setters = { new Setter(Layoutable.WidthProperty, 1d), }, KeyTime = TimeSpan.FromSeconds(0)
+                Setters = { new Setter(Layoutable.WidthProperty, 1d), },
+                KeyTime = TimeSpan.FromSeconds(0)
             };
 
             var keyframe2 = new KeyFrame()
             {
-                Setters = { new Setter(Layoutable.WidthProperty, 2d), }, KeyTime = TimeSpan.FromSeconds(2),
+                Setters = { new Setter(Layoutable.WidthProperty, 2d), },
+                KeyTime = TimeSpan.FromSeconds(2),
             };
 
             var keyframe3 = new KeyFrame()
@@ -420,7 +422,8 @@ namespace Avalonia.Base.UnitTests.Animation
 
             var opacityTransition = new DoubleTransition
             {
-                Property = Visual.OpacityProperty, Duration = TimeSpan.FromSeconds(1),
+                Property = Visual.OpacityProperty,
+                Duration = TimeSpan.FromSeconds(1),
             };
 
             var transitions = new Transitions { opacityTransition };
@@ -462,17 +465,20 @@ namespace Avalonia.Base.UnitTests.Animation
             {
                 var keyframe1 = new KeyFrame()
                 {
-                    Setters = { new Setter(Visual.OpacityProperty, 1d), }, KeyTime = TimeSpan.FromSeconds(0)
+                    Setters = { new Setter(Visual.OpacityProperty, 1d), },
+                    KeyTime = TimeSpan.FromSeconds(0)
                 };
 
                 var keyframe2 = new KeyFrame()
                 {
-                    Setters = { new Setter(Visual.OpacityProperty, 0.5d), }, KeyTime = TimeSpan.FromSeconds(1)
+                    Setters = { new Setter(Visual.OpacityProperty, 0.5d), },
+                    KeyTime = TimeSpan.FromSeconds(1)
                 };
 
                 var animation = new Avalonia.Animation.Animation()
                 {
-                    Duration = TimeSpan.FromSeconds(10), Children = { keyframe1, keyframe2 },
+                    Duration = TimeSpan.FromSeconds(10),
+                    Children = { keyframe1, keyframe2 },
                 };
 
                 Border target;
@@ -501,12 +507,14 @@ namespace Avalonia.Base.UnitTests.Animation
             {
                 var keyframe1 = new KeyFrame()
                 {
-                    Setters = { new Setter(Visual.OpacityProperty, 0d), }, KeyTime = TimeSpan.FromSeconds(0)
+                    Setters = { new Setter(Visual.OpacityProperty, 0d), },
+                    KeyTime = TimeSpan.FromSeconds(0)
                 };
 
                 var keyframe2 = new KeyFrame()
                 {
-                    Setters = { new Setter(Visual.OpacityProperty, 1d), }, KeyTime = TimeSpan.FromSeconds(1)
+                    Setters = { new Setter(Visual.OpacityProperty, 1d), },
+                    KeyTime = TimeSpan.FromSeconds(1)
                 };
 
                 var animation = new Avalonia.Animation.Animation()
@@ -543,7 +551,7 @@ namespace Avalonia.Base.UnitTests.Animation
                 Assert.Equal(0, target.Opacity);
             }
         }
-        
+
         [Fact]
         public void Zero_Duration_Should_Finish_Animation()
         {
@@ -551,12 +559,14 @@ namespace Avalonia.Base.UnitTests.Animation
             {
                 var keyframe1 = new KeyFrame()
                 {
-                    Setters = { new Setter(Visual.OpacityProperty, 1d), }, KeyTime = TimeSpan.FromSeconds(0)
+                    Setters = { new Setter(Visual.OpacityProperty, 1d), },
+                    KeyTime = TimeSpan.FromSeconds(0)
                 };
 
                 var keyframe2 = new KeyFrame()
                 {
-                    Setters = { new Setter(Visual.OpacityProperty, 0.5d), }, KeyTime = TimeSpan.FromSeconds(2)
+                    Setters = { new Setter(Visual.OpacityProperty, 0.5d), },
+                    KeyTime = TimeSpan.FromSeconds(2)
                 };
 
                 var animation = new Avalonia.Animation.Animation()
@@ -604,21 +614,23 @@ namespace Avalonia.Base.UnitTests.Animation
             {
                 var keyframe1 = new KeyFrame()
                 {
-                    Setters = { new Setter(Visual.OpacityProperty, 0d), }, KeyTime = TimeSpan.FromSeconds(0)
+                    Setters = { new Setter(Visual.OpacityProperty, 0d), },
+                    KeyTime = TimeSpan.FromSeconds(0)
                 };
-        
+
                 var keyframe2 = new KeyFrame()
                 {
-                    Setters = { new Setter(Visual.OpacityProperty, 1d), }, KeyTime = TimeSpan.FromSeconds(1)
+                    Setters = { new Setter(Visual.OpacityProperty, 1d), },
+                    KeyTime = TimeSpan.FromSeconds(1)
                 };
-        
+
                 var animation = new Avalonia.Animation.Animation()
                 {
                     Duration = TimeSpan.FromSeconds(1),
                     IterationCount = IterationCount.Infinite,
                     Children = { keyframe1, keyframe2 },
                 };
-        
+
                 Border target;
                 var clock = new TestClock();
                 var root = new TestRoot
@@ -627,25 +639,25 @@ namespace Avalonia.Base.UnitTests.Animation
                     Styles = { new Style(x => x.OfType<Border>()) { Animations = { animation }, } },
                     Child = target = new Border { Background = Brushes.Red, }
                 };
-        
+
                 root.Measure(Size.Infinity);
                 root.Arrange(new Rect(root.DesiredSize));
-                
+
                 clock.Step(TimeSpan.FromSeconds(0));
                 Assert.True(target.IsAnimating(Visual.OpacityProperty));
 
                 clock.Step(TimeSpan.FromSeconds(0.5));
                 Assert.Equal(0.5, target.Opacity);
-        
+
                 clock.Step(TimeSpan.FromSeconds(1));
                 Assert.Equal(0, target.Opacity);
-        
+
                 clock.Step(TimeSpan.FromSeconds(1.5));
                 Assert.Equal(0.5, target.Opacity);
-        
+
                 clock.Step(TimeSpan.FromSeconds(2));
                 Assert.Equal(0, target.Opacity);
-                
+
                 // This is not the normal way to access and set the animations
                 // object's Duration property to zero that is defined in styles
                 // but this is still valid for the RunAsync version.
@@ -654,6 +666,84 @@ namespace Avalonia.Base.UnitTests.Animation
                 Assert.Equal(1, target.Opacity);
                 Assert.False(target.IsAnimating(Visual.OpacityProperty));
             }
+        }
+
+        [Fact]
+        public void Animation_Stop_When_Control_Is_Visible_Hide()
+        {
+            using var app = Start();
+
+            
+            //progressBar.TemplateSettings.Bind(ProgressBar.ProgressBarTemplateSettings.Container2AnimationStartPositionProperty,)
+            var keyFrame1 = new KeyFrame()
+            {
+                KeySpline = KeySpline.Parse("0.4,0,0.6,1", default),
+                KeyTime = TimeSpan.Zero,
+                Setters =
+                {
+                    new Setter(TranslateTransform.XProperty, new Binding("TemplateSettings.ContainerAnimationStartPosition")
+                    {
+                        RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor)
+                        {
+                            AncestorType = typeof(ProgressBar)
+                        },
+                    }),
+                }
+            };
+
+            var keyFrame2 = new KeyFrame()
+            {
+                KeySpline = KeySpline.Parse("0.4,0,0.6,1", default),
+                KeyTime = TimeSpan.Parse("0:0:1.5"),
+                Setters =
+                {
+                    new Setter(TranslateTransform.XProperty, new Binding("TemplateSettings.ContainerAnimationEndPosition")
+                    {
+                        RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor)
+                        {
+                            AncestorType = typeof(ProgressBar)
+                        },
+                    }),
+                }
+            };
+
+            var keyFrame3 = new KeyFrame()
+            {
+                KeySpline = KeySpline.Parse("0.4,0,0.6,1", default),
+                KeyTime = TimeSpan.Parse("0:0:2"),
+                Setters =
+                {
+                    new Setter(TranslateTransform.XProperty, new Binding("TemplateSettings.ContainerAnimationEndPosition")
+                    {
+                        RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor)
+                        {
+                            AncestorType = typeof(ProgressBar)
+                        },
+                    }),
+                }
+            };
+
+            var animation = new Avalonia.Animation.Animation()
+            {
+                Duration = TimeSpan.FromSeconds(2),
+                IterationCount = IterationCount.Infinite,
+                Children = { keyFrame1, keyFrame2,keyFrame3 },
+            };
+
+            ProgressBar target;
+            var clock = new TestClock();
+            
+            var root = new TestRoot
+            {
+                Clock = clock,
+                Styles = { new Style(x => x.OfType<ProgressBar>()) { Animations = { animation }, } },
+                Child = target = new ProgressBar { Background = Brushes.Red, }
+            };
+
+            root.Measure(Size.Infinity);
+            root.Arrange(new Rect(root.DesiredSize));
+
+            Assert.Equal(PlayState.Pause, clock.PlayState);
         }
 
         private static IDisposable Start()
