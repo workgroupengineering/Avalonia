@@ -10,8 +10,8 @@ namespace Avalonia
     public class AvaloniaLocator : IAvaloniaDependencyResolver
     {
         private readonly IAvaloniaDependencyResolver? _parentScope;
-        public static IAvaloniaDependencyResolver Current { get; set; }
-        public static AvaloniaLocator CurrentMutable { get; set; }
+        public static IAvaloniaDependencyResolver Current { get; internal set; }
+        public static AvaloniaLocator CurrentMutable { get; internal set; }
         private readonly Dictionary<Type, Func<object?>> _registry = new Dictionary<Type, Func<object?>>();
 
         static AvaloniaLocator()
