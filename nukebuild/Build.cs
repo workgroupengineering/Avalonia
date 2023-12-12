@@ -45,7 +45,7 @@ partial class Build : NukeBuild
 
     BuildParameters Parameters { get; set; }
 
-    [PackageExecutable("Microsoft.DotNet.ApiCompat.Tool", "Microsoft.DotNet.ApiCompat.Tool.dll", Framework = "net6.0")]
+    [NuGetPackage("Microsoft.DotNet.ApiCompat.Tool", "Microsoft.DotNet.ApiCompat.Tool.dll", Framework = "net6.0")]
     Tool ApiCompatTool;
 
     [PackageExecutable("Microsoft.DotNet.GenAPI.Tool", "Microsoft.DotNet.GenAPI.Tool.dll", Framework = "net8.0")]
@@ -118,13 +118,13 @@ partial class Build : NukeBuild
 
     Target Clean => _ => _.Executes(() =>
     {
-        Parameters.BuildDirs.ForEach(DeleteDirectory);
-        Parameters.BuildDirs.ForEach(EnsureCleanDirectory);
-        EnsureCleanDirectory(Parameters.ArtifactsDir);
-        EnsureCleanDirectory(Parameters.NugetIntermediateRoot);
-        EnsureCleanDirectory(Parameters.NugetRoot);
-        EnsureCleanDirectory(Parameters.ZipRoot);
-        EnsureCleanDirectory(Parameters.TestResultsRoot);
+        Parameters.BuildDirs.ForEach(a => a.DeleteDirectory());
+        Parameters.BuildDirs.ForEach(a => a.CreateOrCleanDirectory());
+        Parameters.ArtifactsDir.CreateOrCleanDirectory();
+        Parameters.NugetIntermediateRoot.CreateOrCleanDirectory();
+        Parameters.NugetRoot.CreateOrCleanDirectory();
+        Parameters.ZipRoot.CreateOrCleanDirectory();
+        Parameters.TestResultsRoot.CreateOrCleanDirectory();
     });
 
     Target CompileHtmlPreviewer => _ => _

@@ -7,7 +7,6 @@ using System.Xml.Linq;
 using Nuke.Common;
 using Nuke.Common.CI.AzurePipelines;
 using Nuke.Common.IO;
-using static Nuke.Common.IO.PathConstruction;
 
 public partial class Build
 {
@@ -66,7 +65,7 @@ public partial class Build
         public AbsolutePath ZipRoot { get; }
         public AbsolutePath TestResultsRoot { get; }
         public string DirSuffix { get; }
-        public List<string> BuildDirs { get; }
+        public List<AbsolutePath> BuildDirs { get; }
         public string FileZipSuffix { get; }
         public AbsolutePath ZipCoreArtifacts { get; }
         public AbsolutePath ZipNuGetArtifacts { get; }
@@ -145,7 +144,7 @@ public partial class Build
             NugetIntermediateRoot = RootDirectory / "build-intermediate" / "nuget";
             ZipRoot = ArtifactsDir / "zip";
             TestResultsRoot = ArtifactsDir / "test-results";
-            BuildDirs = GlobDirectories(RootDirectory, "**bin").Concat(GlobDirectories(RootDirectory, "**obj")).ToList();
+            BuildDirs = RootDirectory.GlobDirectories("**bin").Concat(RootDirectory.GlobDirectories("**obj")).ToList();
             DirSuffix = Configuration;
             FileZipSuffix = Version + ".zip";
             ZipCoreArtifacts = ZipRoot / ("Avalonia-" + FileZipSuffix);
