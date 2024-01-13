@@ -10,7 +10,7 @@ namespace Avalonia.Threading
     /// </summary>
     public class AvaloniaSynchronizationContext : SynchronizationContext
     {
-        internal readonly DispatcherPriority Priority;
+        internal readonly DispatcherPriority _priority;
         private readonly NonPumpingLockHelper.IHelperImpl? _nonPumpingHelper =
             AvaloniaLocator.Current.GetService<NonPumpingLockHelper.IHelperImpl>();
         
@@ -29,9 +29,11 @@ namespace Avalonia.Threading
 
         public AvaloniaSynchronizationContext(DispatcherPriority priority)
         {
-            Priority = priority;
+            _priority = priority;
         }
-        
+
+        public DispatcherPriority Priority => _priority;
+
         /// <summary>
         /// Controls if SynchronizationContext should be installed in InstallIfNeeded. Used by Designer.
         /// </summary>

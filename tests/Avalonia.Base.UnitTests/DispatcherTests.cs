@@ -27,7 +27,7 @@ public class DispatcherTests
         public event Action Timer;
         public long? NextTimer { get; private set; }
         public bool AskedForSignal { get; private set; }
-        
+
         public void UpdateTimer(long? dueTimeInTicks)
         {
             NextTimer = dueTimeInTicks;
@@ -72,22 +72,22 @@ public class DispatcherTests
 
         public void FireBackgroundProcessing()
         {
-            if(!AskedForBackgroundProcessing)
+            if (!AskedForBackgroundProcessing)
                 return;
             AskedForBackgroundProcessing = false;
             ReadyForBackgroundProcessing?.Invoke();
         }
     }
-    
+
     class SimpleControlledDispatcherImpl : SimpleDispatcherWithBackgroundProcessingImpl, IControlledDispatcherImpl
     {
         private readonly bool _useTestTimeout = true;
         private readonly CancellationToken? _cancel;
         public int RunLoopCount { get; private set; }
-        
+
         public SimpleControlledDispatcherImpl()
         {
-            
+
         }
 
         public SimpleControlledDispatcherImpl(CancellationToken cancel, bool useTestTimeout = false)
@@ -95,7 +95,7 @@ public class DispatcherTests
             _useTestTimeout = useTestTimeout;
             _cancel = cancel;
         }
-        
+
         public void RunLoop(CancellationToken token)
         {
             RunLoopCount++;
@@ -113,39 +113,20 @@ public class DispatcherTests
 
 
     }
-    
-    
+
+
     [Fact]
     public void DispatcherExecutesJobsAccordingToPriority()
     {
         var impl = new SimpleDispatcherImpl();
         var disp = new Dispatcher(impl);
         var actions = new List<string>();
-        disp.Post(()=>actions.Add("Background"), DispatcherPriority.Background);
-        disp.Post(()=>actions.Add("Render"), DispatcherPriority.Render);
-        disp.Post(()=>actions.Add("Input"), DispatcherPriority.Input);
+        disp.Post(() => actions.Add("Background"), DispatcherPriority.Background);
+        disp.Post(() => actions.Add("Render"), DispatcherPriority.Render);
+        disp.Post(() => actions.Add("Input"), DispatcherPriority.Input);
         Assert.True(impl.AskedForSignal);
         impl.ExecuteSignal();
         Assert.Equal(new[] { "Render", "Input", "Background" }, actions);
-    }
-    
-    [Fact]
-    public void DispatcherPreservesOrderWhenChangingPriority()
-    {
-        var impl = new SimpleDispatcherImpl();
-        var disp = new Dispatcher(impl);
-        var actions = new List<string>();
-        var toPromote = disp.InvokeAsync(()=>actions.Add("PromotedRender"), DispatcherPriority.Background);
-        var toPromote2 = disp.InvokeAsync(()=>actions.Add("PromotedRender2"), DispatcherPriority.Input);
-        disp.Post(() => actions.Add("Render"), DispatcherPriority.Render);
-        
-        toPromote.Priority = DispatcherPriority.Render;
-        toPromote2.Priority = DispatcherPriority.Render;
-        
-        Assert.True(impl.AskedForSignal);
-        impl.ExecuteSignal();
-        
-        Assert.Equal(new[] { "PromotedRender", "PromotedRender2", "Render" }, actions);
     }
 
 
@@ -179,6 +160,25 @@ public class DispatcherTests
 
 
     [Fact]
+    public void DispatcherPreservesOrderWhenChangingPriority()
+    {
+        var impl = new SimpleDispatcherImpl();
+        var disp = new Dispatcher(impl);
+        var actions = new List<string>();
+        var toPromote = disp.InvokeAsync(() => actions.Add("PromotedRender"), DispatcherPriority.Background);
+        var toPromote2 = disp.InvokeAsync(() => actions.Add("PromotedRender2"), DispatcherPriority.Input);
+        disp.Post(() => actions.Add("Render"), DispatcherPriority.Render);
+
+        toPromote.Priority = DispatcherPriority.Render;
+        toPromote2.Priority = DispatcherPriority.Render;
+
+        Assert.True(impl.AskedForSignal);
+        impl.ExecuteSignal();
+
+        Assert.Equal(new[] { "PromotedRender", "PromotedRender2", "Render" }, actions);
+    }
+
+    [Fact]
     public void DispatcherStopsItemProcessingWhenInteractivityDeadlineIsReached()
     {
         var impl = new SimpleDispatcherImpl();
@@ -207,7 +207,7 @@ public class DispatcherTests
             var expectedCount = (c + 1) * 3;
             if (c == 3)
                 expectedCount = 10;
-            
+
             Assert.Equal(Enumerable.Range(0, expectedCount), actions);
             Assert.False(impl.AskedForSignal);
             if (c < 3)
@@ -218,8 +218,8 @@ public class DispatcherTests
                 Assert.Null(impl.NextTimer);
         }
     }
-    
-    
+
+
     [Fact]
     public void DispatcherStopsItemProcessingWhenInputIsPending()
     {
@@ -254,7 +254,7 @@ public class DispatcherTests
                 3 => 10,
                 _ => throw new InvalidOperationException($"Unexpected value {c}")
             };
-            
+
             Assert.Equal(Enumerable.Range(0, expectedCount), actions);
             Assert.False(impl.AskedForSignal);
             if (c < 3)
@@ -284,7 +284,7 @@ public class DispatcherTests
             foreground ? DispatcherPriority.Default : DispatcherPriority.Background).Wait();
 
         Assert.True(finished);
-        if (controlled) 
+        if (controlled)
             Assert.Equal(foreground ? 0 : 1, ((SimpleControlledDispatcherImpl)impl).RunLoopCount);
     }
 
@@ -300,7 +300,7 @@ public class DispatcherTests
             Dispatcher.ResetForUnitTests();
             SynchronizationContext.SetSynchronizationContext(null);
         }
-        
+
         public void Dispose()
         {
             Dispatcher.ResetForUnitTests();
@@ -308,7 +308,7 @@ public class DispatcherTests
             SynchronizationContext.SetSynchronizationContext(null);
         }
     }
-    
+
     [Fact]
     public void ExitAllFramesShouldExitAllFramesAndBeAbleToContinue()
     {
@@ -330,10 +330,10 @@ public class DispatcherTests
 
 
             disp.MainLoop(CancellationToken.None);
-            
+
             Assert.Equal(new[] { "Nested frame", "ExitAllFrames", "Nested frame exited" }, actions);
             actions.Clear();
-            
+
             var secondLoop = new CancellationTokenSource();
             disp.Post(() =>
             {
@@ -344,8 +344,8 @@ public class DispatcherTests
             Assert.Equal(new[] { "Callback after exit" }, actions);
         }
     }
-    
-        
+
+
     [Fact]
     public void ShutdownShouldExitAllFramesAndNotAllowNewFrames()
     {
@@ -364,7 +364,7 @@ public class DispatcherTests
                 actions.Add("Shutdown");
                 disp.BeginInvokeShutdown(DispatcherPriority.Normal);
             });
-            
+
             disp.Post(() =>
             {
                 actions.Add("Nested frame after shutdown");
@@ -372,12 +372,12 @@ public class DispatcherTests
                 Dispatcher.UIThread.MainLoop(CancellationToken.None);
                 actions.Add("Nested frame after shutdown exited");
             });
-            
+
             var criticalFrameAfterShutdown = new DispatcherFrame(false);
             disp.Post(() =>
             {
                 actions.Add("Critical frame after shutdown");
-                
+
                 Dispatcher.UIThread.PushFrame(criticalFrameAfterShutdown);
                 actions.Add("Critical frame after shutdown exited");
             });
@@ -391,7 +391,7 @@ public class DispatcherTests
 
             Assert.Equal(new[]
             {
-                "Nested frame", 
+                "Nested frame",
                 "Shutdown",
                 // Normal nested frames are supposed to exit immediately
                 "Nested frame after shutdown", "Nested frame after shutdown exited",
@@ -401,8 +401,8 @@ public class DispatcherTests
                 "Nested frame exited"
             }, actions);
             actions.Clear();
-            
-            disp.Post(()=>actions.Add("Frame after shutdown finished"));
+
+            disp.Post(() => actions.Add("Frame after shutdown finished"));
             Assert.Throws<InvalidOperationException>(() => disp.MainLoop(CancellationToken.None));
             Assert.Empty(actions);
         }
@@ -417,7 +417,7 @@ public class DispatcherTests
             return base.Wait(waitHandles, waitAll, millisecondsTimeout);
         }
     }
-    
+
     [Fact]
     public void DisableProcessingShouldStopProcessing()
     {
@@ -436,7 +436,7 @@ public class DispatcherTests
             SynchronizationContext.SetSynchronizationContext(avaloniaContext);
 
             var waitHandle = new ManualResetEvent(true);
-            
+
             helper.WaitCount = 0;
             waitHandle.WaitOne(100);
             Assert.Equal(0, helper.WaitCount);
@@ -460,8 +460,8 @@ public class DispatcherTests
 
             void DumpCurrentPriority() =>
                 priorities.Add(((AvaloniaSynchronizationContext)SynchronizationContext.Current!).Priority);
-                
-                
+
+
             disp.Post(DumpCurrentPriority, DispatcherPriority.Normal);
             disp.Post(DumpCurrentPriority, DispatcherPriority.Loaded);
             disp.Post(DumpCurrentPriority, DispatcherPriority.Input);
@@ -495,34 +495,34 @@ public class DispatcherTests
     public void DispatcherInvokeAsyncUnwrapsTasks()
     {
         int asyncMethodStage = 0;
-        
+
         async Task AsyncMethod()
         {
             asyncMethodStage = 1;
             await Task.Delay(200);
             asyncMethodStage = 2;
         }
-        
+
         async Task<int> AsyncMethodWithResult()
         {
             await Task.Delay(100);
             return 1;
         }
-        
+
         async Task Test()
         {
             await Dispatcher.UIThread.InvokeAsync(AsyncMethod);
             Assert.Equal(2, asyncMethodStage);
             Assert.Equal(1, await Dispatcher.UIThread.InvokeAsync(AsyncMethodWithResult));
             asyncMethodStage = 0;
-            
+
             await Dispatcher.UIThread.InvokeAsync(AsyncMethod, DispatcherPriority.Default);
             Assert.Equal(2, asyncMethodStage);
             Assert.Equal(1, await Dispatcher.UIThread.InvokeAsync(AsyncMethodWithResult, DispatcherPriority.Default));
-            
+
             Dispatcher.UIThread.ExitAllFrames();
         }
-        
+
         using (new DispatcherServices(new ManagedDispatcherImpl(null)))
         {
             var t = Test();

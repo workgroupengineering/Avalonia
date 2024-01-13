@@ -1,5 +1,8 @@
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia;
+using Avalonia.Threading;
+using System.Threading;
 
 namespace Sandbox
 {
@@ -26,11 +29,22 @@ namespace Sandbox
 
             var scheduler = TaskScheduler.Current;
 
-            //await Avalonia.Threading.Dispatcher.UIThread.AwaitWithPriority(LocalTaks(), Avalonia.Threading.DispatcherPriority.Send);
+            // await Avalonia.Threading.Dispatcher.UIThread.AwaitWithPriority(LocalTaks(), Avalonia.Threading.DispatcherPriority.Send);
 
-            await Avalonia.Threading.Dispatcher.UIThread;
+            await Avalonia.Threading.Dispatcher.UIThread.AwaitWithPriority(Avalonia.Threading.DispatcherPriority.Background);
 
             System.Diagnostics.Debug.WriteLine($"After AwaitWithPriority {System.Threading.Thread.CurrentThread.ManagedThreadId} - UI: {Avalonia.Threading.Dispatcher.UIThread.CheckAccess()} AS {System.Threading.Thread.CurrentThread.GetApartmentState()}");
+            System.Diagnostics.Debug.WriteLine($"Priority {((AvaloniaSynchronizationContext)SynchronizationContext.Current!).Priority}");
+
+            await Avalonia.Threading.Dispatcher.UIThread.AwaitWithPriority(Avalonia.Threading.DispatcherPriority.Render);
+
+            System.Diagnostics.Debug.WriteLine($"After AwaitWithPriority {System.Threading.Thread.CurrentThread.ManagedThreadId} - UI: {Avalonia.Threading.Dispatcher.UIThread.CheckAccess()} AS {System.Threading.Thread.CurrentThread.GetApartmentState()}");
+            System.Diagnostics.Debug.WriteLine($"Priority {((AvaloniaSynchronizationContext)SynchronizationContext.Current!).Priority}");
+
+            await Avalonia.Threading.Dispatcher.UIThread.AwaitWithPriority(Avalonia.Threading.DispatcherPriority.Input);
+
+            System.Diagnostics.Debug.WriteLine($"After AwaitWithPriority {System.Threading.Thread.CurrentThread.ManagedThreadId} - UI: {Avalonia.Threading.Dispatcher.UIThread.CheckAccess()} AS {System.Threading.Thread.CurrentThread.GetApartmentState()}");
+            System.Diagnostics.Debug.WriteLine($"Priority {((AvaloniaSynchronizationContext)SynchronizationContext.Current!).Priority}");
 
             await TaskScheduler.Default;
 
@@ -39,12 +53,6 @@ namespace Sandbox
             await StaTaskScheduler.Default;
 
             System.Diagnostics.Debug.WriteLine($"after aStaTaskScheduler.Default {System.Threading.Thread.CurrentThread.ManagedThreadId} - UI: {Avalonia.Threading.Dispatcher.UIThread.CheckAccess()} AS {System.Threading.Thread.CurrentThread.GetApartmentState()}");
-
-            static Task LocalTaks()
-            {
-                System.Diagnostics.Debug.WriteLine($"Inside LocalTaks {System.Threading.Thread.CurrentThread.ManagedThreadId} - UI: {Avalonia.Threading.Dispatcher.UIThread.CheckAccess()} AS {System.Threading.Thread.CurrentThread.GetApartmentState()}");
-                return Task.Delay(1000);
-            }
         }
     }
 }
