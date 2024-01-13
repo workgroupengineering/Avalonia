@@ -148,6 +148,36 @@ public class DispatcherTests
         Assert.Equal(new[] { "PromotedRender", "PromotedRender2", "Render" }, actions);
     }
 
+
+    [Fact]
+    public void AwaitableDispatcherExecutesJobsAccordingToPriority()
+    {
+        var impl = new SimpleDispatcherImpl();
+        var disp = new Dispatcher(impl);
+        var actions = new List<string>();
+
+        Task.Run(async () =>
+        {
+            await disp.AwaitWithPriority(EmptyAsync(), DispatcherPriority.Background);
+            actions.Add("Background");
+            await disp.AwaitWithPriority(EmptyAsync(), DispatcherPriority.Render);
+            actions.Add("Render");
+            await disp.AwaitWithPriority(EmptyAsync(), DispatcherPriority.Input);
+            actions.Add("Input");
+        });
+        //Assert.True(impl.AskedForSignal);
+        while (!impl.AskedForSignal)
+            ;
+        impl.ExecuteSignal();
+        Assert.Equal(new[] { "Render", "Input", "Background" }, actions);
+
+        static async Task EmptyAsync()
+        {
+            await Task.Yield();
+        }
+    }
+
+
     [Fact]
     public void DispatcherStopsItemProcessingWhenInteractivityDeadlineIsReached()
     {
