@@ -606,6 +606,55 @@ namespace Avalonia.Controls.UnitTests
         }
 
         [Fact]
+        public void TabItem_Header_Should_Have_Same_DataContext_Of_TabItem()
+        {
+            using (UnitTestApplication.Start(TestServices.StyledWindow))
+            {
+                var target = new TabControl
+                {
+                    Template = TabControlTemplate(),
+                    ItemContainerTheme = new ControlTheme(typeof(TabItem))
+                    {
+                        Setters =
+                        {
+                            new Setter(TabItem.HeaderProperty,new Binding("Header")),
+                            new Setter(TabItem.ContentProperty, new Binding("Content")),
+                        }
+                    },
+                    DataContext = new
+                    {
+                        Tabs = new TabItemModel[]
+                            {
+                                new ("A","Content A"),
+                                new ("B","Content B"),
+                            }
+                    },
+                };
+
+                target.Bind(TabControl.ItemsSourceProperty, new Binding("Tabs"));
+
+
+                target.ApplyTemplate();
+                // window.LayoutManager.InvalidateMeasure(tabControl);
+
+
+
+                Assert.Equal(2, target.ItemCount);
+
+                if (target.GetRealizedContainers().ElementAt(0) is TabItem tabItem)
+                {
+                    Assert.Equal("A",tabItem.Header);
+                }
+                else
+                {
+                    Assert.Fail("TabItem isn't realizzed");
+                }
+                
+
+            }
+        }
+
+        [Fact]
         public void TabItem_TabStripPlacement_Should_Be_Correctly_Set()
         {
             var items = new object[]
@@ -859,6 +908,8 @@ namespace Avalonia.Controls.UnitTests
 
             public string Value { get; }
         }
+
+        private record TabItemModel(string Header, string Content);
 
         private class TestTabControl : TabControl
         {
