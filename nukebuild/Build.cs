@@ -33,7 +33,7 @@ using Nuke.Common.IO;
     GitHubActionsImage.WindowsLatest,
     GitHubActionsImage.UbuntuLatest,
     GitHubActionsImage.MacOsLatest,
-    On = new[] { GitHubActionsTrigger.PullRequest },
+    On = new[] { GitHubActionsTrigger.PullRequest, GitHubActionsTrigger.Push },
     InvokedTargets = new[] { nameof(Build.Package) },
     EnableGitHubToken = true,
     ImportSecrets = new[] { nameof(Build.NuGetApiKey) }
