@@ -32,8 +32,8 @@ using static Serilog.Log;
     GitHubActionsImage.MacOsLatest,
     On = new[] { GitHubActionsTrigger.PullRequest, GitHubActionsTrigger.Push },
     InvokedTargets = new[] { nameof(Build.Package) },
-    EnableGitHubToken = true,
-    ImportSecrets = new[] { nameof(Build.NuGetApiKey) },
+    //EnableGitHubToken = true,
+    //ImportSecrets = new[] { nameof(Build.NuGetApiKey) },
     Submodules = GitHubActionsSubmodules.Recursive
     )]
 partial class Build : NukeBuild
