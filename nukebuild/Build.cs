@@ -6,17 +6,17 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using MicroCom.CodeGenerator;
 using Nuke.Common;
+using Nuke.Common.CI.GitHubActions;
+using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.Npm;
 using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
-using static Nuke.Common.Tools.MSBuild.MSBuildTasks;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
-using static Nuke.Common.Tools.Xunit.XunitTasks;
-using static Nuke.Common.Tools.VSWhere.VSWhereTasks;
 using static Serilog.Log;
 using MicroCom.CodeGenerator;
 using NuGet.Configuration;
@@ -29,14 +29,24 @@ using Nuke.Common.IO;
  VSCode - https://marketplace.visualstudio.com/items?itemName=nuke.support
 
  */
-
+[GitHubActions("Build",
+    GitHubActionsImage.WindowsLatest,
+    GitHubActionsImage.UbuntuLatest,
+    GitHubActionsImage.MacOsLatest,
+    On = new[] { GitHubActionsTrigger.PullRequest },
+    InvokedTargets = new[] { nameof(Build.Package) },
+    EnableGitHubToken = true,
+    ImportSecrets = new[] { nameof(Build.NuGetApiKey) }
+    )]
 partial class Build : NukeBuild
 {
+    [Parameter][Secret] readonly string NuGetApiKey;
+
     BuildParameters Parameters { get; set; }
 
     [PackageExecutable("Microsoft.DotNet.ApiCompat.Tool", "Microsoft.DotNet.ApiCompat.Tool.dll", Framework = "net6.0")]
     Tool ApiCompatTool;
-    
+
     [PackageExecutable("Microsoft.DotNet.GenAPI.Tool", "Microsoft.DotNet.GenAPI.Tool.dll", Framework = "net8.0")]
     Tool ApiGenTool;
 
@@ -73,7 +83,7 @@ partial class Build : NukeBuild
         void ExecWait(string preamble, string command, string args)
         {
             Console.WriteLine(preamble);
-            Process.Start(new ProcessStartInfo(command, args) {UseShellExecute = false}).WaitForExit();
+            Process.Start(new ProcessStartInfo(command, args) { UseShellExecute = false }).WaitForExit();
         }
         ExecWait("dotnet version:", "dotnet", "--info");
         ExecWait("dotnet workloads:", "dotnet", "workload list");
@@ -312,14 +322,14 @@ partial class Build : NukeBuild
                                                        IlRepackTool);
             var config = Numerge.MergeConfiguration.LoadFile(RootDirectory / "nukebuild" / "numerge.config");
             EnsureCleanDirectory(Parameters.NugetRoot);
-            if(!Numerge.NugetPackageMerger.Merge(Parameters.NugetIntermediateRoot, Parameters.NugetRoot, config,
+            if (!Numerge.NugetPackageMerger.Merge(Parameters.NugetIntermediateRoot, Parameters.NugetRoot, config,
                 new NumergeNukeLogger()))
                 throw new Exception("Package merge failed");
             RefAssemblyGenerator.GenerateRefAsmsInPackage(
                 Parameters.NugetRoot / $"Avalonia.{Parameters.Version}.nupkg",
                 Parameters.NugetRoot / $"Avalonia.{Parameters.Version}.snupkg");
         });
-    
+
     Target ValidateApiDiff => _ => _
         .DependsOn(CreateNugetPackages)
         .Executes(async () =>
@@ -329,7 +339,7 @@ partial class Build : NukeBuild
                     ApiCompatTool, nugetPackage, Parameters.ApiValidationBaseline,
                     Parameters.ApiValidationSuppressionFiles, Parameters.UpdateApiValidationSuppression)));
         });
-    
+
     Target OutputApiDiff => _ => _
         .DependsOn(CreateNugetPackages)
         .Executes(async () =>
@@ -339,7 +349,7 @@ partial class Build : NukeBuild
                     ApiGenTool, RootDirectory / "api" / "diff",
                     nugetPackage, Parameters.ApiValidationBaseline)));
         });
-    
+
     Target RunTests => _ => _
         .DependsOn(RunCoreLibsTests)
         .DependsOn(RunRenderTests)
