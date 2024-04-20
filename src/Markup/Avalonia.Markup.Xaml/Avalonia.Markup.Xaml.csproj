@@ -73,4 +73,8 @@
     <InternalsVisibleTo Include="Avalonia.Markup.Xaml.Loader, PublicKey=$(AvaloniaPublicKey)" />
     <InternalsVisibleTo Include="Avalonia.Markup.Xaml.UnitTests, PublicKey=$(AvaloniaPublicKey)" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+  </ItemGroup>
 </Project>

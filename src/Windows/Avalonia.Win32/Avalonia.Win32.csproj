@@ -38,4 +38,7 @@
     <InternalsVisibleTo Include="Avalonia.Win32.Interoperability, PublicKey=$(AvaloniaPublicKey)" />
     <InternalsVisibleTo Include="Avalonia.Direct2D1, PublicKey=$(AvaloniaPublicKey)" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+  </ItemGroup>
 </Project>

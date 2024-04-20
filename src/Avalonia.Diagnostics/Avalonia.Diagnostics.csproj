@@ -17,6 +17,9 @@
     <ProjectReference Include="..\Avalonia.Controls\Avalonia.Controls.csproj" />
     <ProjectReference Include="..\Avalonia.Themes.Simple\Avalonia.Themes.Simple.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+  </ItemGroup>
   <Import Project="..\..\build\EmbedXaml.props" />
   <Import Project="..\..\build\BuildTargets.targets" />
   <Import Project="..\..\build\NullableEnable.props" />

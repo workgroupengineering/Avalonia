@@ -66,4 +66,8 @@
   <ItemGroup Label="Build dependency">
     <ProjectReference Include="$(MSBuildThisFileDirectory)\..\Avalonia.Build.Tasks\Avalonia.Build.Tasks.csproj" SetTargetFramework="TargetFramework=netstandard2.0" ReferenceOutputAssembly="false" SkipGetTargetFrameworkProperties="true" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+  </ItemGroup>
 </Project>

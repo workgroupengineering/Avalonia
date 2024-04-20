@@ -16,11 +16,15 @@
   <ItemGroup Label="InternalsVisibleTo">
     <InternalsVisibleTo Include="Avalonia.Direct2D1.RenderTests, PublicKey=$(AvaloniaPublicKey)" />
     <InternalsVisibleTo Include="Avalonia.Direct2D1.UnitTests, PublicKey=$(AvaloniaPublicKey)" />
-    <InternalsVisibleTo Include="Avalonia.Win32.Interoperability, PublicKey=$(AvaloniaPublicKey)"/>
+    <InternalsVisibleTo Include="Avalonia.Win32.Interoperability, PublicKey=$(AvaloniaPublicKey)" />
     <InternalsVisibleTo Include="Avalonia.Win32.Interop, PublicKey=$(AvaloniaPublicKey)" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
   </ItemGroup>
 </Project>
