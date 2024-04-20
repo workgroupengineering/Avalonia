@@ -12,6 +12,9 @@
   <ItemGroup>
     <AvaloniaResource Include="..\Avalonia.Themes.Fluent\Strings\InvariantResources.xaml" Link="Strings\InvariantResources.xaml" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+  </ItemGroup>
   <Import Project="..\..\build\NullableEnable.props" />
   <Import Project="..\..\build\BuildTargets.targets" />
   <Import Project="..\..\build\TrimmingEnable.props" />
