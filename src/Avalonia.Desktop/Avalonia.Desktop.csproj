@@ -11,6 +11,10 @@
     <ProjectReference Include="../Avalonia.X11/Avalonia.X11.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+  </ItemGroup>
+
   <Import Project="..\..\build\TrimmingEnable.props" />
   <Import Project="..\..\build\NullableEnable.props" />
 </Project>
