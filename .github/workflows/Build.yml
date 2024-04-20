@@ -57,7 +57,7 @@ jobs:
       - name: Install Workloads
         run: |
           dotnet workload install android macos wasm-tools
-          curl -sSL https://raw.githubusercontent.com/Samsung/Tizen.NET/main/workload/scripts/workload-install.sh | sudo bash -s -- -d "/opt/hostedtoolcache/dotnet"
+          curl -sSL https://raw.githubusercontent.com/Samsung/Tizen.NET/main/workload/scripts/workload-install.sh | sudo bash -s -- -d "~/.nuget/packages"
       - name: Run './build.sh Package'
         run: ./build.sh Package
   macos-latest:
@@ -77,6 +77,6 @@ jobs:
       - name: Install  Workloads
         run: |
           dotnet workload install android ios macos wasm-tools
-          curl -sSL https://raw.githubusercontent.com/Samsung/Tizen.NET/main/workload/scripts/workload-install.sh | sudo bash -s -- -d "/opt/hostedtoolcache/dotnet"
+          curl -sSL https://raw.githubusercontent.com/Samsung/Tizen.NET/main/workload/scripts/workload-install.sh | sudo bash -s -- -d "~/.nuget/packages"
       - name: Run './build.sh Package'
         run: ./build.sh Package
