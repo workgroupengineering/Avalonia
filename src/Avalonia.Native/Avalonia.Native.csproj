@@ -25,6 +25,10 @@
     <MicroComIdl Include="avn.idl" CSharpInteropPath="Interop.Generated.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+  </ItemGroup>
+
   <Import Project="..\..\build\DevAnalyzers.props" />
   <Import Project="..\..\build\TrimmingEnable.props" />
 </Project>

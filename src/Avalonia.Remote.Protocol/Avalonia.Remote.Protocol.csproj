@@ -10,5 +10,8 @@
     <Compile Include="..\Avalonia.Base\Input\PhysicalKey.cs" />
     <Compile Include="..\Avalonia.Base\Compatibility\TrimmingAttributes.cs" Visible="False" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+  </ItemGroup>
   <Import Project="..\..\build\TrimmingEnable.props" />
 </Project>

@@ -14,7 +14,11 @@
   <Import Project="..\..\build\TrimmingEnable.props" />
 
   <ItemGroup>
-    <Compile Remove="..\Shared\SourceGeneratorAttributes.cs"/>
-    <None Include="..\Shared\SourceGeneratorAttributes.cs" Visible="false"/>
+    <Compile Remove="..\Shared\SourceGeneratorAttributes.cs" />
+    <None Include="..\Shared\SourceGeneratorAttributes.cs" Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
   </ItemGroup>
 </Project>
