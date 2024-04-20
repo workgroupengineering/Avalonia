@@ -15,7 +15,7 @@
 
   <Import Project="..\build\JetBrains.dotMemoryUnit.props" />
   <ItemGroup>
-    <PackageReference Include="Nuke.Common" Version="7.0.6" />
+    <PackageReference Include="Nuke.Common" Version="8.0.0" />
     <PackageReference Include="vswhere" Version="3.1.7" Condition=" '$(OS)' == 'Windows_NT' ">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -25,6 +25,7 @@
     <PackageReference Include="Mono.Cecil" Version="0.11.5" />
     <PackageReference Include="Microsoft.Build.Framework" Version="17.3.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Debugging.Tools.PdbStr" Version="20230731.1609.0" GeneratePathProperty="true" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Debugging.Tools.PdbStr" Version="20240409.1131.0" GeneratePathProperty="true" PrivateAssets="All" />
     <PackageReference Include="xunit.runner.console" Version="2.4.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

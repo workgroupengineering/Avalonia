@@ -58,6 +58,7 @@
     <Compile Include="..\..\Shared\RawEventGrouping.cs">
       <Link>RawEventGrouping.cs</Link>
     </Compile>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
   </ItemGroup>
 
 </Project>

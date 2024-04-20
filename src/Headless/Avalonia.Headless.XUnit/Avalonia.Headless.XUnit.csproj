@@ -13,6 +13,10 @@
     <ProjectReference Include="..\Avalonia.Headless\Avalonia.Headless.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+  </ItemGroup>
+
   <Import Project="..\..\..\build\DevAnalyzers.props" />
   <Import Project="..\..\..\build\NullableEnable.props" />
 </Project>

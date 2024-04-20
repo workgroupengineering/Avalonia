@@ -129,4 +129,9 @@
     </ItemGroup>
   <Import Project="../../build/SourceGenerators.props" />
   <Import Project="../../build/NullableEnable.props" />
+
+    <ItemGroup>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+    </ItemGroup>
+  <Import Project="..\..\build\SourceGenerators.props" />
 </Project>

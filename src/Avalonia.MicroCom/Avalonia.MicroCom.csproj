@@ -12,6 +12,9 @@
       <SetTargetFramework>TargetFramework=netstandard2.0</SetTargetFramework>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+  </ItemGroup>
   <Import Project="..\..\build\BuildTargets.targets" />
   <Import Project="..\..\build\TrimmingEnable.props" />
   <Import Project="..\..\build\NullableEnable.props" />
