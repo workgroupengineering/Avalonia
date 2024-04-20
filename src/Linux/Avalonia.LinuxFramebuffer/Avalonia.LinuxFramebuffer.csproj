@@ -8,5 +8,8 @@
     <ProjectReference Include="..\..\Skia\Avalonia.Skia\Avalonia.Skia.csproj" />
     <Compile Include="..\..\Shared\RawEventGrouping.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+  </ItemGroup>
   <Import Project="..\..\..\build\TrimmingEnable.props" />
 </Project>

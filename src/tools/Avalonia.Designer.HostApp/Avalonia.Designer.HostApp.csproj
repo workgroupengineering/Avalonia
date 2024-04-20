@@ -15,6 +15,9 @@
     <Compile Include="..\..\..\src\Markup\Avalonia.Markup.Xaml.Loader\AvaloniaXamlIlRuntimeCompiler.cs" />
     <Compile Include="..\..\..\src\Markup\Avalonia.Markup.Xaml.Loader\CompilerDynamicDependencies.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+  </ItemGroup>
   <Import Project="..\..\..\src\Markup\Avalonia.Markup.Xaml.Loader\IncludeXamlIlSre.props" />
   <Import Project="..\..\..\build\DevAnalyzers.props" />
   <Import Project="..\..\..\build\TrimmingEnable.props" />
