@@ -38,7 +38,7 @@ using static Serilog.Log;
     )]
 partial class Build : NukeBuild
 {
-    [Parameter][Secret] readonly string NuGetApiKey;
+    //[Parameter][Secret] readonly string NuGetApiKey;
 
     BuildParameters Parameters { get; set; }
 
