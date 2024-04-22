@@ -98,7 +98,7 @@ partial class Build : NukeBuild
             c.AddProperty("JavaSdkDirectory", GetVariable<string>("JAVA_HOME_11_X64"));
         c.AddProperty("PackageVersion", Parameters.Version)
             .SetConfiguration(Parameters.Configuration)
-            .SetVerbosity(DotNetVerbosity.Minimal);
+            .SetVerbosity(DotNetVerbosity.minimal);
         if (Parameters.IsPackingToLocalCache)
             c
                 .AddProperty("ForcePackAvaloniaNative", "True")
@@ -322,7 +322,7 @@ partial class Build : NukeBuild
                                                        Parameters.Version + ".nupkg",
                                                        IlRepackTool);
             var config = Numerge.MergeConfiguration.LoadFile(RootDirectory / "nukebuild" / "numerge.config");
-            EnsureCleanDirectory(Parameters.NugetRoot);
+            AbsolutePath.Create(Parameters.NugetRoot).CreateOrCleanDirectory();
             if (!Numerge.NugetPackageMerger.Merge(Parameters.NugetIntermediateRoot, Parameters.NugetRoot, config,
                 new NumergeNukeLogger()))
                 throw new Exception("Package merge failed");
