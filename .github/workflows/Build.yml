@@ -37,6 +37,11 @@ jobs:
                 6.0.x
                 8.0.x
             cache: true
+      - uses: actions/setup-java@v4
+        with:
+            distribution: 'microsoft'
+            java-version: '21'
+            cache: true
       - name: Cache .nuke/temp, ~/.nuget/packages
         uses: actions/cache@v2
         with:
