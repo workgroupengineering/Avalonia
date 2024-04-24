@@ -30,6 +30,12 @@ jobs:
         uses: microsoft/setup-msbuild@v2
         with:
             vs-version: '[15.1,17.9.4)'
+      - name: Setup Dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+            dotnet-version: | 
+                6.0.x
+                8.0.x
       - name: Cache .nuke/temp, ~/.nuget/packages
         uses: actions/cache@v2
         with:
