@@ -217,6 +217,10 @@ internal class RoslynConstructor : IXamlConstructor
             .Select(parameter => new RoslynParameter(_assembly, parameter).ParameterType)
             .ToList();
 
+    public string Name => _symbol.Name;
+
+    public IXamlType DeclaringType => new RoslynType(_symbol.ContainingType , _assembly);
+
     public IXamlParameterInfo GetParameterInfo(int index) => new RoslynParameter(_assembly, _symbol.Parameters[index]);
 }
 
@@ -249,6 +253,8 @@ internal class RoslynProperty : IXamlProperty
     public IReadOnlyList<IXamlCustomAttribute> CustomAttributes { get; } = Array.Empty<IXamlCustomAttribute>();
 
     public IReadOnlyList<IXamlType> IndexerParameters { get; } = new List<IXamlType>();
+
+    public IXamlType DeclaringType => throw new NotImplementedException();
 }
 
 internal class RoslynParameter : IXamlParameterInfo
