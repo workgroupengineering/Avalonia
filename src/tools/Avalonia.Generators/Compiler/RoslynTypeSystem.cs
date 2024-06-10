@@ -255,6 +255,8 @@ internal class RoslynProperty : IXamlProperty
     public IReadOnlyList<IXamlCustomAttribute> CustomAttributes => [];
 
     public IReadOnlyList<IXamlType> IndexerParameters => [];
+
+    public IXamlType DeclaringType => throw new NotImplementedException();
 }
 
 internal class RoslynParameter : IXamlParameterInfo

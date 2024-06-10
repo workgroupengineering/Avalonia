@@ -23,6 +23,10 @@
     <Compile Include="../../Shared/IsExternalInit.cs" Link="IsExternalInit.cs" Visible="False" />
     <Compile Include="../../Avalonia.Base/Compatibility/TrimmingAttributes.cs" Link="TrimmingAttributes.cs" Visible="False" />
     <Compile Include="../../Avalonia.Base/Compatibility/NullableAttributes.cs" Link="TrimmingAttributes.cs" Visible="False" />
+    <Compile Remove="..\..\Markup\Avalonia.Markup.Xaml.Loader\xamlil.github\src\XamlX\Compatibility\NullableAttributes.cs" />
+    <Compile Include="..\..\Avalonia.Base\Metadata\NullableAttributes.cs" Link="NullableAttributes.cs" />
+    <Compile Include="..\..\Shared\IsExternalInit.cs" Link="IsExternalInit.cs" Visible="False" />
+    <Compile Include="..\..\Avalonia.Base\Compatibility\TrimmingAttributes.cs" Link="TrimmingAttributes.cs" Visible="False" />
   </ItemGroup>
 
   <ItemGroup>
