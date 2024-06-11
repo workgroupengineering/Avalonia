@@ -1,4 +1,13 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
-        x:Class="Sandbox.MainWindow">
+        xmlns:l='using:Sandbox'
+        x:Class="Sandbox.MainWindow"
+        x:DataType="l:MainViewModel">
+  <ItemsControl ItemsSource="{Binding Items}">
+    <ItemsControl.ItemTemplate>
+      <DataTemplate DataType="{x:Type l:SomeClass+Data}">
+        <TextBlock Text="{Binding Value}" />
+      </DataTemplate>
+    </ItemsControl.ItemTemplate>
+  </ItemsControl>
 </Window>
