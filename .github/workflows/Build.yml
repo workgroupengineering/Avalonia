@@ -36,10 +36,6 @@ jobs:
             dotnet-version: | 
                 6.0.x
                 8.0.x
-      - uses: actions/setup-java@v4
-        with:
-            distribution: 'microsoft'
-            java-version: '21'
       - name: Cache .nuke/temp, ~/.nuget/packages
         uses: actions/cache@v4
         with:
@@ -51,6 +47,11 @@ jobs:
         run: |
           dotnet workload install android ios tvos wasm-tools
           (New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Samsung/Tizen.NET/main/workload/scripts/workload-install.ps1') | Invoke-Expression
-    
+
+      - name: Install Java
+        uses: actions/setup-java@v4
+        with:
+              distribution: 'microsoft'
+              java-version: '21'    
       - name: Run './build.cmd Package'
         run: ./build.cmd Package
